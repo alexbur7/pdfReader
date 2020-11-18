@@ -32,7 +32,6 @@ public class BookFragment extends Fragment {
 
     private static final String KEY_TO_URI = "key_to_uri";
     private static final int REQUEST_PERMISSION = 1;
-    private boolean mPermission;
     private Uri mUri;
 
     @Nullable
@@ -42,8 +41,6 @@ public class BookFragment extends Fragment {
         PDFView pdfView = v.findViewById(R.id.pdf_view);
         mUri =getArguments().getParcelable(KEY_TO_URI);
         permission_fn(mUri);
-        //String provider = "com.android.providers.files.DocumentProvider";
-        //getActivity().grantUriPermission(provider,getActivity().getIntent().setAction(Intent.ACTION_OPEN_DOCUMENT).getData(),Intent.FLAG_GRANT_READ_URI_PERMISSION);
         setUpPdfView(pdfView, mUri);
         setHasOptionsMenu(true);
         return v;
@@ -57,45 +54,20 @@ public class BookFragment extends Fragment {
             }
         }
         else {
-            mPermission =true;
-            writeToBase(uri);
+            DBCreater.getInstance(getActivity()).writeToBase(uri);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode==REQUEST_PERMISSION){
             if (grantResults.length > 0  && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                mPermission = true;
-                writeToBase(mUri);
+                DBCreater.getInstance(getActivity()).writeToBase(mUri);
             }
-        }
-        else {
-
         }
     }
 
-    private void writeToBase(Uri uri){
-        String name = uri.getLastPathSegment();
-        List<Pdf> pdfList=DBCreater.getInstance(getActivity()).getPDFs();
-        for (Pdf pdf:pdfList){
-            if (pdf.getUri().equals(uri)) return;
-        }
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-
-        DBCreater.getInstance(getActivity()).insertBook(new Pdf(uri,name));
-    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {

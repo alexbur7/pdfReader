@@ -2,4 +2,5 @@
     <string name="app_name">pdfReader</string>
     <string name="move_to_history">To history</string>
     <string name="move_to_pdf">To Pdf</string>
+    <string name="new_pdf">New pdf</string>
 </resources>

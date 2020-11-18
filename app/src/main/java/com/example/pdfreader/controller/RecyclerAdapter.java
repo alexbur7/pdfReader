@@ -33,7 +33,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.PDFHol
         return mPdfList;
     }
 
-    public void setPdfList(ArrayList<Pdf> pdfList) {
+    public void setPdfList(List<Pdf> pdfList) {
         mPdfList = pdfList;
     }
 
@@ -73,10 +73,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.PDFHol
 
         @Override
         public void onClick(View v) {
-            Intent intent=new Intent(mContext, BookActivity.class);
-            Log.e("URI",mUri);
-            intent.setData(Uri.parse(mUri));
-            mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, BookActivity.class);
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                Log.e("URI", mUri);
+                intent.setData(Uri.parse(mUri));
+                mContext.startActivity(intent);
         }
     }
 }

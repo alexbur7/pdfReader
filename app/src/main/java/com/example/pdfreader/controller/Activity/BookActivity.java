@@ -22,4 +22,8 @@ public class BookActivity extends SingleFragmentActivity {
         return R.layout.acitivity_fragment;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
